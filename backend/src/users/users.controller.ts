@@ -17,7 +17,6 @@ export class UsersController {
             return res.status(500).json({ error: 'Internal server error' })
         }
     }
-    async findUser(req: Request, res: Response) {}
-    async findUsers(req: Request, res: Response) {}
+    async getUser(req: Request, res: Response) {}
     async removeUser(req: Request, res: Response) {}
 }

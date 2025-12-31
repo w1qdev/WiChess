@@ -1,7 +1,7 @@
 import { AppService } from './app/app.service.ts'
 
-const appService = new AppService()
+const app = new AppService()
 
-appService.run(() => {
+app.run(() => {
     console.log('Server has been started')
 })
