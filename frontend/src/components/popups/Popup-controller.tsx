@@ -64,7 +64,6 @@ export const PopupController = ({
 
         if (currentPopupMode.isLoginPopupOpen) {
             // Если вход в аккаунт
-            // TODO: Сделать проверку на правильность ввода email и пароля через regex
 
             await apiInstance
                 .loginUser({
@@ -84,7 +83,6 @@ export const PopupController = ({
                 })
         } else if (currentPopupMode.isSignUpPopupOpen) {
             // Если регистрация аккаунта
-            // TODO: Сделать проверку на правильность ввода email и пароля через regex
 
             if (formData.password !== formData.passwordRepeat) {
                 return toast.error('Пароли не совпадают :(')

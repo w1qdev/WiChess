@@ -64,7 +64,7 @@ export class AuthService implements AuthServiceType {
 
         if (!user?.id) {
             return {
-                error: 'The user does not exists',
+                error: 'Этот пользователь не существует',
             }
         }
 
@@ -75,7 +75,7 @@ export class AuthService implements AuthServiceType {
 
         if (!verifyPassword) {
             return {
-                error: 'Passwords does not equals',
+                error: 'Пароли не совпадают',
             }
         }
 
@@ -94,7 +94,7 @@ export class AuthService implements AuthServiceType {
 
         if (isUserExists?.id) {
             return {
-                error: 'The user already exists',
+                error: 'Этот пользователь уже существует',
             }
         }
 
