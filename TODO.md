@@ -229,8 +229,8 @@
 
 ### 19. Добавить rate limiting
 
--   [ ] Установить библиотеку `express-rate-limit`
--   [ ] Настроить rate limiting для auth endpoints (например, 5 попыток в 15 минут)
+-   [+] Установить библиотеку `express-rate-limit`
+-   [+] Настроить rate limiting для auth endpoints (например, 5 попыток в 15 минут)
 -   [ ] Настроить общий rate limiting для всех endpoints
 
 **Файлы для изменения:**
