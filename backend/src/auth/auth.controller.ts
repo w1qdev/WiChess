@@ -1,5 +1,7 @@
 import { type Request, type Response } from 'express'
 import { AuthService } from './auth.service.ts'
+import { z } from 'zod'
+import { ValidationService } from '../utils/validation.service.ts'
 
 export class AuthController {
     private authService: AuthService
@@ -29,22 +31,22 @@ export class AuthController {
         try {
             const { email, password, passwordRepeat } = req.body
 
-            if (!email || !password || !passwordRepeat) {
-                return res
-                    .status(400)
-                    .json({ error: 'Email and password are required' })
+            if (!ValidationService.validateEmail(email)) {
+                return res.status(400).json({ error: 'Неверный Email' })
+            }
+
+            if (!ValidationService.validatePassword(password)) {
+                return res.status(400).json({ error: 'Неверный Пароль' })
             }
 
             if (password !== passwordRepeat) {
-                return res
-                    .status(400)
-                    .json({ error: 'Passwords are not equals' })
+                return res.status(400).json({ error: 'Пароли не совпадают' })
             }
 
             const result = await this.authService.signUp({ email, password })
+
             return res.status(200).json(result)
         } catch (error) {
-            console.log(error)
             return res.status(500).json({ error: 'Internal server error' })
         }
     }

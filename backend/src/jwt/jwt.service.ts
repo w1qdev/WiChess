@@ -1,24 +1,37 @@
 import 'dotenv/config'
 import jwt from 'jsonwebtoken'
-import { v4 as uuid } from 'uuid'
 
 export class JwtService {
     private jwt: typeof jwt
-    private uuid: typeof uuid
     private secretKey: string | undefined
 
     constructor() {
         this.jwt = jwt
-        this.uuid = uuid
         this.secretKey = process.env.JWT_SECRET_KEY
+
+        if (!this.secretKey) {
+            throw new Error('JWT_SECRET_KEY is not defined')
+        }
     }
 
     createJwtToken(userId: string) {
-        const token = this.jwt.sign(
+        const accessToken = this.jwt.sign({ id: userId }, `${this.secretKey}`, {
+            expiresIn: '15m',
+        })
+
+        const refreshToken = this.jwt.sign(
             { id: userId },
-            `${process.env.JWT_SECRET_KEY}`
+            `${this.secretKey}`,
+            {
+                expiresIn: '7d',
+            }
         )
 
-        return token
+        return { accessToken, refreshToken }
+    }
+
+    verifyToken(token: string) {
+        const result = this.jwt.verify(token, `${this.secretKey}`)
+        return result
     }
 }

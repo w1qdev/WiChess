@@ -35,7 +35,10 @@ type SignUpCredentials = {
 type SignUpResponse = {
     success?: boolean
     error?: string
-    token?: string
+    tokens?: {
+        accessToken: string
+        refreshToken: string
+    }
 }
 
 type AuthServiceType = {
@@ -76,15 +79,11 @@ export class AuthService implements AuthServiceType {
             }
         }
 
-        const jwtToken = this.jwtService.createJwtToken(user.id)
+        const { accessToken } = this.jwtService.createJwtToken(user.id)
 
         return {
             success: true,
-            token: jwtToken,
-            user: {
-                id: user.id,
-                email: credentials.email,
-            },
+            token: accessToken,
         }
     }
 
@@ -100,7 +99,8 @@ export class AuthService implements AuthServiceType {
         }
 
         const userId = uuid()
-        const jwtToken = this.jwtService.createJwtToken(userId)
+        const { accessToken, refreshToken } =
+            this.jwtService.createJwtToken(userId)
         const hashedPassword = await this.hashService.hashPassword(password)
 
         await this.userService.createUser({
@@ -111,7 +111,7 @@ export class AuthService implements AuthServiceType {
 
         return {
             success: true,
-            token: jwtToken,
+            tokens: { accessToken, refreshToken },
         }
     }
 
