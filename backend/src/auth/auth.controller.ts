@@ -41,22 +41,40 @@ export class AuthController {
         try {
             const { email, password, passwordRepeat } = req.body
 
-            if (!ValidationService.validateEmail(email)) {
-                return res.status(400).json({ error: 'Неверный Email' })
+            const validationResult = ValidationService.validateSignUp({
+                email,
+                password,
+                passwordRepeat,
+            })
+
+            if (!validationResult.success) {
+                const errorMessages = validationResult.error.issues.map(
+                    (issue) => issue.message
+                )
+                return res.status(400).json({
+                    error:
+                        errorMessages.length > 0
+                            ? errorMessages.join(', ')
+                            : 'Ошибка валидации данных',
+                })
             }
 
-            if (!ValidationService.validatePassword(password)) {
-                return res.status(400).json({ error: 'Неверный Пароль' })
+            // Используем валидированные и санитизированные данные
+            const { email: validatedEmail, password: validatedPassword } =
+                validationResult.data
+
+            const result = await this.authService.signUp({
+                email: validatedEmail,
+                password: validatedPassword,
+            })
+
+            if (result.error) {
+                return res.status(400).json({ error: result.error })
             }
 
-            if (password !== passwordRepeat) {
-                return res.status(400).json({ error: 'Пароли не совпадают' })
-            }
-
-            const result = await this.authService.signUp({ email, password })
-
-            this.logger.log(`Новый пользоваеть успешно создан ${email}`)
-
+            this.logger.log(
+                `Новый пользователь успешно создан ${validatedEmail}`
+            )
             return res.status(200).json(result)
         } catch (error) {
             this.logger.error(
