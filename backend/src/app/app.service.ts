@@ -16,7 +16,12 @@ export class AppService {
     run(callbackFn?: () => void) {
         this.app?.use(express.json())
         this.app?.use(helmet())
-        this.app?.use(cors())
+        this.app?.use(
+            cors({
+                origin: 'http://localhost:5173',
+                credentials: true,
+            })
+        )
 
         this.app?.use('/api/auth', authModule())
         this.app?.use('/api/users', UserModule())

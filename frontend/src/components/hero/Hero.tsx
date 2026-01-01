@@ -46,7 +46,7 @@ export const Hero = () => {
                             whileTap={{ y: 5, scale: 0.98 }}
                             transition={{ type: 'spring', stiffness: 100 }}
                         >
-                            Игрвать в шахматы
+                            Играть в шахматы
                         </motion.button>
 
                         <motion.button

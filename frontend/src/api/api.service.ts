@@ -9,7 +9,7 @@ type UserDataSignUp = UserDataLogIn & {
     passwordRepeat: string
 }
 
-export class APIService {
+class APIService {
     private api
 
     constructor() {
@@ -28,3 +28,5 @@ export class APIService {
         return result
     }
 }
+
+export const apiInstance = new APIService()

@@ -3,14 +3,15 @@ import { Toaster } from 'react-hot-toast'
 import { Header } from './components/header/Header'
 import { PopupController } from './components/popups/Popup-controller'
 import { WelcomePage } from './pages/WelcomePage/WelcomePage'
-import { useAuth } from './store/store'
+import { useAuthStore } from './store/store'
 
 function App() {
     const [popupMode, setIsPopupOpen] = useState({
         isSignUpPopupOpen: false,
         isLoginPopupOpen: false,
+        isRefreshPopupOpen: false,
     })
-    const isUserAuthenticated = useAuth((state) => state.isAuthenticated)
+    const isUserAuthenticated = useAuthStore((state) => state.isAuthenticated)
 
     const handleOpenSignUpPopup = (e: React.MouseEvent<HTMLElement>) => {
         e.stopPropagation()
