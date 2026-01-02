@@ -80,7 +80,7 @@ export class AuthController {
             this.logger.error(
                 error instanceof Error
                     ? error.message
-                    : 'Ошибка при регистрации пользователя'
+                    : 'Ошибка при регистрации пользователя!'
             )
             return res.status(500).json({ error: 'Внутренняя ошибка сервера' })
         }
