@@ -4,7 +4,9 @@ import { Layout } from '../components/layout/Layout'
 
 const WelcomePage = lazy(() => import('../pages/WelcomePage/WelcomePage'))
 const PlaygroundPage = lazy(() =>
-    import('../pages/Playground/PlaygroundPage')
+    import('../pages/Playground/PlaygroundPage').then((module) => ({
+        default: module.Playground,
+    }))
 )
 
 export const router = createBrowserRouter([
