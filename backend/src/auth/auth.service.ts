@@ -30,6 +30,7 @@ type LogoutResponse = {
 type SignUpCredentials = {
     email: string
     password: string
+    username: string
 }
 
 type SignUpResponse = {
@@ -88,7 +89,7 @@ export class AuthService implements AuthServiceType {
     }
 
     async signUp(credentials: SignUpCredentials): Promise<SignUpResponse> {
-        const { email, password } = credentials
+        const { email, password, username } = credentials
 
         const isUserExists = await this.userService.getUserByEmail(email)
 
@@ -106,6 +107,7 @@ export class AuthService implements AuthServiceType {
         await this.userService.createUser({
             id: userId,
             email,
+            username,
             password: hashedPassword,
         })
 

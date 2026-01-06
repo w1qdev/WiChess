@@ -39,9 +39,10 @@ export class AuthController {
 
     signUpUser = async (req: Request, res: Response) => {
         try {
-            const { email, password, passwordRepeat } = req.body
+            const { email, password, passwordRepeat, username } = req.body
 
             const validationResult = ValidationService.validateSignUp({
+                username,
                 email,
                 password,
                 passwordRepeat,
@@ -60,12 +61,16 @@ export class AuthController {
             }
 
             // Используем валидированные и санитизированные данные
-            const { email: validatedEmail, password: validatedPassword } =
-                validationResult.data
+            const {
+                email: validatedEmail,
+                password: validatedPassword,
+                username: validatedUsername,
+            } = validationResult.data
 
             const result = await this.authService.signUp({
                 email: validatedEmail,
                 password: validatedPassword,
+                username: validatedUsername,
             })
 
             if (result.error) {

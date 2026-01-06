@@ -1,12 +1,12 @@
-import { type FormEventHandler } from 'react'
+import type React from 'react'
 import { Popup } from './Popup'
 import { type FormDataType } from './Popup-controller'
 
 type PopupSignUpPropsType = {
     trigger: boolean
-    triggerHandler: (e: React.MouseEvent<HTMLElement>) => void
-    onSubmitHandler: (e: React.FormEvent<FormEventHandler>) => void
-    triggerHandlerOpenLogin: (e: React.MouseEvent<HTMLElement>) => void
+    triggerHandler: () => void
+    onSubmitHandler: (e: React.MouseEvent<HTMLButtonElement>) => void
+    triggerHandlerOpenLogin: () => void
     formData: FormDataType
     handleChangeFormData: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
@@ -28,6 +28,21 @@ export const PopupSignUp = ({
             <form className="flex flex-col">
                 <div>
                     <div className="flex flex-col">
+                        <label htmlFor="email" className="mb-1.5 text-sm">
+                            What is your name?
+                        </label>
+                        <input
+                            id="username"
+                            placeholder="Josh"
+                            required
+                            type="text"
+                            className="bg-[#131313] h-10 rounded-md outline-none px-2 border-transparent border-2 focus:border-[#fcc028] hover:border-[#fbbe243b] transition-colors duration-300"
+                            value={formData.username}
+                            onChange={handleChangeFormData}
+                        />
+                    </div>
+
+                    <div className="flex flex-col mt-2">
                         <label htmlFor="email" className="mb-1.5 text-sm">
                             Email
                         </label>
@@ -73,6 +88,7 @@ export const PopupSignUp = ({
                 <div className="w-full h-30 mt-8">
                     <button
                         className="h-10 w-full flex justify-center items-center bg-[#fcc028] text-[#343434] rounded-sm cursor-pointer"
+                        type="button"
                         onClick={onSubmitHandler}
                     >
                         Зарегистрироваться
@@ -80,6 +96,7 @@ export const PopupSignUp = ({
 
                     <button
                         className="w-full mt-2 cursor-pointer px-10 py-2 bg-[#181818] text-[#d8d8d8] text-md font-mediu, rounded-sm hover:bg-[#303030] hover:text-[#ffd56b] transition-colors duration-300"
+                        type="button"
                         onClick={triggerHandlerOpenLogin}
                     >
                         Есть аккаунт? Войти

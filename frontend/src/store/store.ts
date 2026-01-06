@@ -1,17 +1,35 @@
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
-export const useAuthStore = create()(
+type AuthState = {
+    isAuthenticated: boolean
+    token: string
+    username: string
+    setToken: (newToken: string) => void
+    setUsername: (username: string) => void
+}
+
+export const useAuthStore = create<AuthState>()(
     persist(
         (set) => ({
-            isAuthenticated: !!localStorage.getItem('token') || false,
-            token: localStorage.getItem('token') || '',
-            setToken: (newToken: string) =>
-                set({ isAuthenticated: !!newToken, token: newToken }),
+            isAuthenticated: false,
+            username: '',
+            token: '',
+            setToken: (newToken: string) => {
+                set({ isAuthenticated: !!newToken, token: newToken })
+            },
+            setUsername: (username: string) => {
+                set({ username })
+            },
         }),
         {
             name: 'auth-storage',
-            storage: createJSONStorage(() => localStorage), // (optional) by default, 'localStorage' is used
+            storage: createJSONStorage(() => localStorage),
+            partialize: (state) => ({
+                token: state.token,
+                username: state.username,
+                isAuthenticated: state.isAuthenticated,
+            }),
         }
     )
 )

@@ -2,6 +2,7 @@ import type { MenuProps } from 'antd'
 import { Dropdown } from 'antd'
 import { ChessQueen, ChevronDown } from 'lucide-react'
 import { useAuthStore } from '../../store/store'
+import { Link } from 'react-router-dom'
 
 type HeaderPropsType = {
     handleOpenSignUpPopup: (e: React.MouseEvent<HTMLElement>) => void
@@ -58,6 +59,8 @@ const DropDownMenuItems: MenuProps['items'] = [
 ]
 
 const HeaderUserProfileButton = () => {
+    const username = useAuthStore((state) => state.username)
+
     return (
         <Dropdown
             menu={{ items: DropDownMenuItems }}
@@ -66,7 +69,7 @@ const HeaderUserProfileButton = () => {
             className="bg-[#181818]"
         >
             <div className="flex justify-center items-center gap-2 cursor-pointer hover:bg-[#202020] py-1 px-2 rounded-md transition-colors duration-300">
-                <div className="mr-3">Даниил</div>
+                <div className="mr-3">{username}</div>
                 <div className="w-9 h-9 rounded-full bg-[#5f5f5f]"></div>
                 <ChevronDown className="w-6 h-6 text-[#5f5f5f]" />
             </div>
@@ -83,10 +86,13 @@ export const Header = ({
     return (
         <div className="flex justify-center items-center w-full h-15 bg-[#111111] text-white fixed top-0 left-0">
             <div className="w-full max-w-300 flex justify-between items-center">
-                <div className="cursor-pointer hover:text-[#FBBF24] transition-colors duration-300 flex justify-between gap-2 items-center">
+                <Link
+                    to={'/'}
+                    className="cursor-pointer hover:text-[#FBBF24] transition-colors duration-300 flex justify-between gap-2 items-center"
+                >
                     <ChessQueen />
                     <div className="font-bold">WiChess</div>
-                </div>
+                </Link>
 
                 <div className="flex justify-center gap-2 items-center transition-colors duration-300">
                     {isUserAuthenticated === false && (

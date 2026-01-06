@@ -34,6 +34,8 @@ export class UsersController {
             const { email } = req.params
 
             const result = await this.userService.getUserByEmail(email)
+
+            return res.status(200).json(result)
         } catch (error: unknown) {
             this.logger.error(
                 error instanceof Error
@@ -43,18 +45,19 @@ export class UsersController {
             return res.status(500).json({ error: 'Внутренняя ошибка сервера' })
         }
     }
-    async removeUser(req: Request, res: Response) {
-        try {
-            const { email } = req.params
 
-            const result = await this.userService.removeUser(email)
-        } catch (error: unknown) {
-            this.logger.error(
-                error instanceof Error
-                    ? error.message
-                    : 'Ошибка при удалении пользователя'
-            )
-            return res.status(500).json({ error: 'Внутренняя ошибка сервера' })
-        }
-    }
+    // async removeUser(req: Request, res: Response) {
+    //     try {
+    //         const { email } = req.params
+
+    //         const result = await this.userService.removeUser(email)
+    //     } catch (error: unknown) {
+    //         this.logger.error(
+    //             error instanceof Error
+    //                 ? error.message
+    //                 : 'Ошибка при удалении пользователя'
+    //         )
+    //         return res.status(500).json({ error: 'Внутренняя ошибка сервера' })
+    //     }
+    // }
 }

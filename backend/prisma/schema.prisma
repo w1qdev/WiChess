@@ -12,8 +12,9 @@ datasource db {
 
 
 model User {
-  id       String      @id
-  email    String      @unique
-  password String 
-  name     String?
+  id           String      @id
+  email        String      @unique
+  password     String 
+  username     String      @unique
+  rating       Int         @default(500)
 }

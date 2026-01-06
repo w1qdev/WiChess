@@ -3,6 +3,7 @@ import api from './api.config'
 type UserDataLogIn = {
     email: string
     password: string
+    username?: string
 }
 
 type UserDataSignUp = UserDataLogIn & {

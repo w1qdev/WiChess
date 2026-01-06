@@ -4,7 +4,8 @@ type getAllUsersResponse = Promise<
     {
         id: string
         email: string
-        name: string | null
+        username: string
+        rating: number
     }[]
 >
 
@@ -16,6 +17,8 @@ type CreateUserCredentials = {
     id: string
     email: string
     password: string
+    username: string
+    rating?: number
 }
 
 export class UserService implements UserServiceType {
@@ -24,7 +27,8 @@ export class UserService implements UserServiceType {
             select: {
                 id: true,
                 email: true,
-                name: true,
+                username: true,
+                rating: true,
             },
         })
 
@@ -42,13 +46,15 @@ export class UserService implements UserServiceType {
     }
 
     async createUser(credentials: CreateUserCredentials) {
-        const { id, email, password } = credentials
+        const { id, email, password, username, rating } = credentials
 
         const newUser = await prismaClient.user.create({
             data: {
                 id,
                 email,
                 password,
+                username,
+                rating,
             },
         })
 

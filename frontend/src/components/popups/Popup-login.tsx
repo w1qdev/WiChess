@@ -1,12 +1,12 @@
-import { type FormEventHandler } from 'react'
+import type React from 'react'
 import { Popup } from './Popup'
 import { type FormDataType } from './Popup-controller'
 
 type PopupLoginPropsType = {
     trigger: boolean
-    triggerHandler: (e: React.MouseEvent<HTMLElement>) => void
-    onSubmitHandler: (e: React.FormEvent<FormEventHandler>) => void
-    triggerHandlerOpenSignUp: (e: React.MouseEvent<HTMLElement>) => void
+    triggerHandler: () => void
+    onSubmitHandler: (e: React.MouseEvent<HTMLButtonElement>) => void
+    triggerHandlerOpenSignUp: () => void
     formData: FormDataType
     handleChangeFormData: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
@@ -70,6 +70,7 @@ export const PopupLogin = ({
                 <div className="w-full h-30 mt-8">
                     <button
                         className="h-10 w-full flex justify-center items-center bg-[#fcc028] text-[#343434] rounded-sm cursor-pointer"
+                        type="button"
                         onClick={onSubmitHandler}
                     >
                         Войти
@@ -77,6 +78,7 @@ export const PopupLogin = ({
 
                     <button
                         className="w-full mt-2 cursor-pointer px-10 py-2 bg-[#181818] text-[#d8d8d8] text-md font-mediu, rounded-sm hover:bg-[#303030] hover:text-[#ffd56b] transition-colors duration-300"
+                        type="button"
                         onClick={triggerHandlerOpenSignUp}
                     >
                         Нет аккаунта? Зарегистрироваться

@@ -16,6 +16,12 @@ export class ValidationService {
 
     static signUpSchema = z
         .object({
+            username: z
+                .string()
+                .min(3, 'Имя пользователя слишком короткое')
+                .max(32, 'Имя пользователя слишком длинное')
+                .regex(/^[a-zA-Z0-9_]+$/, 'Допустимы только буквы, цифры и _')
+                .transform((val) => val.trim()),
             email: z
                 .string()
                 .email('Неверный формат email')

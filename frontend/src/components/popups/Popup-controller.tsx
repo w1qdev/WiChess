@@ -1,39 +1,42 @@
 import { AnimatePresence } from 'framer-motion'
-import { useState, type FormEventHandler } from 'react'
+import { useState } from 'react'
 import toast from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
 import { apiInstance } from '../../api/api.service'
 import { FormValidator } from '../../common/form.validator'
 import { useAuthStore } from '../../store/store'
+import type { PopupMode } from '../layout/Layout'
 import { PopupLogin } from './Popup-login'
 import { PopupSignUp } from './Popup-signup'
 
 type PopupControllerPropsType = {
-    currentPopupMode: {
-        isSignUpPopupOpen: boolean
-        isLoginPopupOpen: boolean
-        isRefreshPopupOpen: boolean
-    }
-    handleOpenSignUpPopup: (e: React.MouseEvent<HTMLElement>) => void
-    handleOpenLoginPopup: (e: React.MouseEvent<HTMLElement>) => void
+    currentPopupMode: PopupMode
+    handleOpenSignUpPopup: () => void
+    handleOpenLoginPopup: () => void
+    handleClosePopup: () => void
 }
 
 export type FormDataType = {
     email: string | ''
     password: string | ''
     passwordRepeat: string | ''
+    username: string | ''
 }
 
 export const PopupController = ({
     currentPopupMode,
     handleOpenSignUpPopup,
     handleOpenLoginPopup,
+    handleClosePopup,
 }: PopupControllerPropsType) => {
+    const navigate = useNavigate()
     const [formData, setFormData] = useState<FormDataType>({
         email: '',
         password: '',
         passwordRepeat: '',
+        username: '',
     })
-    const { setToken } = useAuthStore()
+    const { setToken, setUsername } = useAuthStore()
 
     const handleChangeFormData = (
         event: React.ChangeEvent<HTMLInputElement>
@@ -44,7 +47,7 @@ export const PopupController = ({
         }))
     }
 
-    const sendForm = async (e: React.FormEvent<FormEventHandler>) => {
+    const sendForm = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
 
         if (!formData.email || !formData.password) {
@@ -62,7 +65,7 @@ export const PopupController = ({
             return toast.error('Неверный Email или Пароль')
         }
 
-        if (currentPopupMode.isLoginPopupOpen) {
+        if (currentPopupMode === 'login') {
             // Если вход в аккаунт
 
             await apiInstance
@@ -79,9 +82,13 @@ export const PopupController = ({
                         if (res.data?.token) {
                             setToken(res.data?.token)
                         }
+
+                        // Закрываем попап после успешного входа
+                        handleClosePopup()
+                        navigate('/playground')
                     }
                 })
-        } else if (currentPopupMode.isSignUpPopupOpen) {
+        } else if (currentPopupMode === 'signup') {
             // Если регистрация аккаунта
 
             if (formData.password !== formData.passwordRepeat) {
@@ -93,6 +100,7 @@ export const PopupController = ({
                     email: formData.email,
                     password: formData.password,
                     passwordRepeat: formData.passwordRepeat,
+                    username: formData.username,
                 })
                 .then((res) => {
                     if (res.data?.error) {
@@ -100,11 +108,19 @@ export const PopupController = ({
                     }
 
                     if (res.data?.success) {
-                        if (res.data?.token) {
-                            setToken(res.data?.token)
+                        const accessToken = res.data?.tokens?.accessToken
+                        if (accessToken) {
+                            setToken(accessToken)
                         }
 
-                        return toast.success('Аккаунт успешно создан!')
+                        if (formData.username) {
+                            setUsername(formData.username)
+                        }
+
+                        toast.success('Аккаунт успешно создан!')
+
+                        handleClosePopup()
+                        navigate('/playground')
                     }
                 })
         }
@@ -112,11 +128,11 @@ export const PopupController = ({
 
     return (
         <AnimatePresence>
-            {currentPopupMode.isSignUpPopupOpen && (
+            {currentPopupMode === 'signup' && (
                 <PopupSignUp
                     key="signup"
-                    trigger={currentPopupMode.isSignUpPopupOpen}
-                    triggerHandler={handleOpenSignUpPopup}
+                    trigger
+                    triggerHandler={handleClosePopup}
                     triggerHandlerOpenLogin={handleOpenLoginPopup}
                     onSubmitHandler={sendForm}
                     formData={formData}
@@ -124,11 +140,11 @@ export const PopupController = ({
                 />
             )}
 
-            {currentPopupMode.isLoginPopupOpen && (
+            {currentPopupMode === 'login' && (
                 <PopupLogin
                     key="login"
-                    trigger={currentPopupMode.isLoginPopupOpen}
-                    triggerHandler={handleOpenLoginPopup}
+                    trigger
+                    triggerHandler={handleClosePopup}
                     triggerHandlerOpenSignUp={handleOpenSignUpPopup}
                     onSubmitHandler={sendForm}
                     formData={formData}
